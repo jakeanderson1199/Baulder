@@ -12,7 +12,7 @@ namespace Models
 {
     public class Game{
     public string OwnerName {get; set;}
-    public Boolean Start {get; set;}
+    //public Boolean Start {get; set;}
     public Dictionary<string,Player> PlayerDict {get; set;} = new Dictionary<string,Player>();
     public Turn Turn {get; set;} = new Turn();
     public string GameID {get; set;}

@@ -25,7 +25,9 @@ private QuestionRepository questionRepository;
         [HttpGet]
         [Route("api/games")]
         public IActionResult GetGames() {
-            var games = gameManager.GetGames();
+            var g = gameManager.GetGames();
+            List<GameSummary> games = new List<GameSummary>();
+            g.ForEach(g => {})
             return Ok(games);
         }
 

@@ -1,0 +1,62 @@
+<!--row with header-->
+<div class="row">
+  <div class="col"></div>
+
+  <div class="col text-center">
+    <div class="h1 d-inline-block">Welcome to BoulderDash</div>
+  </div>
+
+    <div class="col text-right">
+        <span *ngIf="user" >welcome {{user}}</span>
+    </div>
+  </div>
+
+<!--row with grid or user entry-->
+<div class="row">
+
+  <div *ngIf="!user" class="col text-center">
+    <label>name:
+      <input  (keyup.enter)="user = tmpUser" [(ngModel)]="tmpUser" placeholder="name">
+    </label>
+    <button (click)="user = tmpUser">Save</button>
+  </div>
+
+  <div class="col text-center" *ngIf="user">
+    <div class="m-auto" style="max-width: 600px">
+        <div class="h3 mt-5">Available Games</div>
+
+      <div class="row bg-info">
+
+        <div class="col text-left">
+          <label style="color: white; font-weight: bold">Owner</label>
+        </div>
+
+        <div class="col-2">
+        </div>
+      </div>
+
+
+      <div class="row" *ngFor="let g of games">
+
+        <div class="col text-left">
+          {{g.ownerName}}<pre>{{g | json}}</pre>
+        </div>
+        <div class="col-2">
+
+          <a class="btn btn-light btn-sm" (click)="savePlayer(g)">join</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--row with buttons-->
+<div *ngIf="user" class="row mt-3">
+  <div class="col text-center">
+
+    <button (click)="startGame()">Start Game</button>
+
+    <button (click)="showGames()">Refresh Games</button>
+
+  </div>
+</div>
