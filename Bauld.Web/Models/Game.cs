@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,31 +11,29 @@ using Microsoft.Extensions.Logging;
 namespace Models
 {
     public class Game{
-    List<string> j;
-    
-    public int Add(int i, int j)
-    {
-        return i + j;
+    public string OwnerName {get; set;}
+    public Boolean Start {get; set;}
+    public Dictionary<string,Player> PlayerDict {get; set;} = new Dictionary<string,Player>();
+    public Turn Turn {get; set;} = new Turn();
+    public string GameID {get; set;}
+
+    public void NewTurn(Question q){
+        this.Turn.CurrentQuestion = q;
+        if (this.Turn.Answers != null) {
+            this.Turn.Answers.Clear();
+        }
+        if (this.Turn.Votes != null){
+            this.Turn.Votes.Clear();
+        }
+
     }
-    public List<Question> getQuestions(String file){
-    var result = new List<Question>();
-    using (StreamReader reader = new StreamReader(file)) {
-            string line = null;
-            while (null != (line = reader.ReadLine())) {
-               string[] questionList = line.Split(",");
-               var question = new Question {
-                   Label = questionList[0],
-                   Category = questionList[1],
-                   Answer = questionList[2],
-               };
-               result.Add(question);
-               
-            }
-           return result; 
+    public void AddPlayer(Player p) {
+        p.PlayerID = System.Guid.NewGuid().ToString();
+        this.PlayerDict.Add(p.PlayerID,p);
     }
     
     
-}
+    
 public void Collections() {
 
     var ageMap = new Dictionary<string, int>();

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
+using Models;
 namespace bauld
 {
     public class Startup
@@ -27,6 +27,9 @@ namespace bauld
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+            services.AddSingleton(typeof(QuestionRepository), typeof(QuestionRepository));
+            services.AddSingleton(typeof(GameManager), typeof(GameManager));
+            services.AddSingleton(typeof(GameRepository), typeof(GameRepository));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,7 +46,7 @@ namespace bauld
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+           // app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
@@ -63,7 +66,8 @@ namespace bauld
 
                 if (env.IsDevelopment())
                 {
-                    spa.UseAngularCliServer(npmScript: "start");
+                    //spa.UseAngularCliServer(npmScript: "start");
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
                 }
             });
         }

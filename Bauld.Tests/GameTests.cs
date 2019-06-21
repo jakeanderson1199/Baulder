@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Xunit;
 using Models;
 namespace Bauld.Tests
@@ -8,9 +9,10 @@ namespace Bauld.Tests
         [Fact]
         public void TestGetQuestions()
         {
-            var game = new Game();
-            var result = game.getQuestions(@"C:\Dev\bauld\Bauld.Web\Models\questions.txt");
-            Assert.Equal(4,result.Count);
+            var list = new List<Question>{new Question{Label = "test"}};
+            var q = new QuestionRepository(list);
+            var result = q.getNextQuestion();
+            Assert.Equal("test",result.Label);
         }
     }
 }
