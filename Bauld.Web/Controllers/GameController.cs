@@ -84,7 +84,8 @@ private GameModel GameToGameModel(Game game){
         public IActionResult PostVote(String gameId, [FromBody] Answer a) {
             Game g = this.gameManager.GetGame(gameId);
             g.Turn.Answers.Add(a);
-            return Ok(g);
+            var gameModel = this.GameToGameModel(g);
+            return Ok(gameModel);
         }
         [HttpPost]
         [Route("api/games/{gameId}/votes/points")]

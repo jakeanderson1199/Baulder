@@ -52,7 +52,7 @@
       <div>
           Player: {{p.name}} Points:{{p.points}}
       </div>
-      <div *ngIf="owner==user">
+      <div *ngIf="game?.ownerName==user">
           <a class="btn btn-light btn-sm" (click)="nextTurn()">New Turn</a>
       </div>
   </div>
