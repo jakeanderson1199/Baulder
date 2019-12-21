@@ -5,8 +5,7 @@ namespace Models
     public class GameRepository
     {
         private Dictionary<string,Game> Games { get; set; } = new Dictionary<string, Game>();
-        public Game AddGame(string Owner){
-            var g = new Game{OwnerName = Owner, GameID = System.Guid.NewGuid().ToString()};
+        public Game AddGame(Game g){
             Games.Add(g.GameID, g);
             return g;
      }   

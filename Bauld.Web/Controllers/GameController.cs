@@ -11,6 +11,14 @@ namespace bauld.Controllers
     {
 private GameManager gameManager;
 private QuestionRepository questionRepository;
+private GameModel GameToGameModel(Game game){
+    var playerList = game.PlayerDict.Values.ToList();
+    var gameModel = new GameModel{
+    OwnerName = game.OwnerName, Players = playerList, Turn = game.Turn, GameID = game.GameID
+                
+    };
+    return gameModel;
+}
         public GameController(GameManager gameManager, QuestionRepository questionRepository) {
             this.gameManager = gameManager;
             this.questionRepository = questionRepository;
@@ -20,14 +28,20 @@ private QuestionRepository questionRepository;
         [Route("api/games/{gameId}")]
         public IActionResult GetGame(string gameId) {
             var game = gameManager.GetGame(gameId);
-            return Ok(game);
+            var gameModel = this.GameToGameModel(game);
+            return Ok(gameModel);
         }
         [HttpGet]
         [Route("api/games")]
         public IActionResult GetGames() {
             var g = gameManager.GetGames();
             List<GameSummary> games = new List<GameSummary>();
-            g.ForEach(g => {})
+            g.ForEach(game => {
+                var gameSummary = new GameSummary();
+                gameSummary.GameId = game.GameID;
+                gameSummary.OwnerName = game.OwnerName;
+                games.Add(gameSummary);
+            });
             return Ok(games);
         }
 
@@ -42,9 +56,10 @@ private QuestionRepository questionRepository;
 
         [HttpPost]
         [Route("api/games/{gameId}/players")]
-        public IActionResult AddPlayer([FromBody] Player player, String gameId) {
+        public IActionResult AddPlayer([FromBody] AddPlayerRequest player, String gameId) {
             Game g = this.gameManager.GetGame(gameId);
-            g.AddPlayer(player);
+            Player p = new Player {Name = player.Name};
+            g.AddPlayer(p);
             return Ok(player);
         }
 
@@ -57,14 +72,15 @@ private QuestionRepository questionRepository;
             return Ok(g);
         }
         [HttpPost]
-        [Route("api/games/{gameId}/answers")]
-        public IActionResult PostAnswer(String gameId, [FromBody] Answer a) {
+        [Route("api/games/{gameId}/players/{user}/answer")]
+        public IActionResult PostAnswer(String gameId, String user, [FromBody] Answer a) {
             Game g = this.gameManager.GetGame(gameId);
             g.Turn.Answers.Add(a);
-            return Ok(g);
+            var gameModel = this.GameToGameModel(g);
+            return Ok(gameModel);
         }
         [HttpPost]
-        [Route("api/games/{gameId}/votes")]
+        [Route("api/games/{gameId}/players/{user}/vote")]
         public IActionResult PostVote(String gameId, [FromBody] Answer a) {
             Game g = this.gameManager.GetGame(gameId);
             g.Turn.Answers.Add(a);

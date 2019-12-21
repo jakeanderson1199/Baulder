@@ -1,0 +1,66 @@
+<div>
+  <label>  Category </label>
+  {{game?.turn?.currentQuestion?.category}}
+</div>
+
+<div>
+  <label>Question</label>
+{{game?.turn?.currentQuestion?.label}}
+</div>
+
+
+
+<div *ngIf="!allAnswered"> all answered {{!allAnswered}}
+<div *ngIf="userAnswered"> user answered {{userAnswered}}
+  Waiting for Players to answer...
+</div>
+
+<div>
+  <label>answer:
+      <input [(ngModel)]="answer" placeholder="answer">{{answer}}
+  </label>
+</div>
+<div>
+  <button (click)="saveAnswer()">Save Answer</button>
+</div>
+<div>
+  <button (click)="refresh()">refresh</button>
+</div>
+</div>
+
+<div *ngIf="allAnswered && !userVoted">
+<div class="row" *ngFor="let a of answers">
+
+  <div class="col-auto">
+      <div style="width: 70px">
+          <a *ngIf="!a.isUser"  class="btn btn-light btn-sm" (click)="vote(a)">vote</a>
+      </div>
+  </div>
+
+  <div class="col text-left">
+      {{a.answer}}
+  </div>
+  
+</div>
+
+</div>
+
+<hr />
+<div *ngIf="userVoted">
+<div class="row" *ngFor="let p of game.players">
+  <div class="col-auto">
+      <div>
+          Player: {{p.name}} Points:{{p.points}}
+      </div>
+      <div *ngIf="owner==user">
+          <a class="btn btn-light btn-sm" (click)="nextTurn()">New Turn</a>
+      </div>
+  </div>
+
+</div>
+</div>
+
+<a (click)="ui.showjson = !ui.showjson">show/hide json</a>
+<pre *ngIf="ui.showjson">
+{{game | json}}
+</pre>

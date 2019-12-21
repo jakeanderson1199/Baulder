@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GameService, Game, GameSummary }  from '../game.service';
+import { GameService, GameModel, GameSummary }  from '../game.service';
 
 import {ActivatedRoute, Router } from '@angular/router';
 
@@ -26,11 +26,11 @@ tmpUser: string;
      this.gameService.user = user;
   }
 
-  savePlayer(game: Game): void {
-    this.gameService.addPlayer(game.owner_name,this.user)
+  savePlayer(game: GameModel): void {
+    this.gameService.addPlayer(game.gameId,this.user)
     .subscribe(r=> {
       console.log(r);
-      this.router.navigate([`/games/${game.owner_name}`])
+      this.router.navigate([`/games/${game.gameId}`])
     })
   }
   startGame(): void {

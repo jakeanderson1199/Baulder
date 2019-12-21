@@ -17,21 +17,25 @@ export class GameService {
   user: string;
   baseurl = '/api';  
   //baseurl = 'http://192.168.1.19:5000';
-  addPlayer (owner: string, player: string): Observable<any> {
-    let url = `${this.baseurl}/games/${owner}/players/${player}`
-    return this.http.post<any>(url, {}, httpOptions)
+  addPlayer (gameId: string, player: string): Observable<any> {
+    let url = `${this.baseurl}/games/${gameId}/players`
+    let body = {
+      "Name": player
+    }
+    return this.http.post<any>(url, body, httpOptions)
   }
   
-  postAnswer (owner: string, answer: string): Observable<any> {
-    let url = `${this.baseurl}/games/${owner}/players/${this.user}/answer`
+  postAnswer (gameId: string, answer: string): Observable<any> {
+    let url = `${this.baseurl}/games/${gameId}/players/${this.user}/answer`
     let body = {
-     "answer": answer
+     "text": answer,
+     "UserName": this.user
    }
     return this.http.post<any>(url, body, httpOptions)
   }
   
   startGame (user: String){
-    let g = new Game();
+    let g = new GameModel();
     let url = `${this.baseurl}/games/${user}`
     return this.http.post<any>(url, {}, httpOptions)
   }
@@ -39,8 +43,8 @@ export class GameService {
     let url = `${this.baseurl}/games`
     return this.http.get<GameSummary[]>(url,httpOptions)
   }
-  getGame (owner_name: string){
-    let url = `${this.baseurl}/games/${owner_name}`
+  getGame (gameId: string){
+    let url = `${this.baseurl}/games/${gameId}`
     return this.http.get<any>(url,httpOptions)
   }
   postVote (owner_name: string,player_name: string,vote: string){
@@ -58,16 +62,48 @@ export class GameService {
 
 }
 
-export class Game {
-owner_name: string;
+export class GameModel {
+ownerName: string;
 players: any[];
 answers: any[];
 votes: any[];
 index: number;
-turn : any;
+turn : Turn;
+gameId : string;
 }
 
 export interface GameSummary{
   ownerName: string;
   gameId: string;
+}
+export class Player{
+  name: string;
+  points: number;
+  answer: Answer;
+  owner: boolean;
+  playerID: string;
+  
+}
+export class Answer{
+  userName: string;
+  text: string;
+  isReal: boolean;
+  isUser: boolean;
+  
+}
+export class Turn{
+  answers: Answer[];
+  votes: Vote[];
+  currentQuestion: Question;
+  
+}
+export class Question{
+  label: string;
+  category: string;
+  answer: string;
+}
+export class Vote {
+  answerId: string;  //This is the PlayerID of the person who wrote the answer
+  playerId: string;  //This is the PlayerID of the person who voted for the answer specified above
+  correctAnswer: boolean;
 }

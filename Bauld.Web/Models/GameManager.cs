@@ -34,13 +34,12 @@ namespace Models
                }
             });
         }
-        public Game AddGame(string owner) {
-
-            var g = new Game(); 
+        public Game AddGame(string Owner) {
+            var g = new Game{OwnerName = Owner, GameID = System.Guid.NewGuid().ToString()}; 
 
             var q = this.NextQuestion();
             g.NewTurn(q);
-            this.gameRepository.AddGame(owner);
+            this.gameRepository.AddGame(g);
 
             
 
