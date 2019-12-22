@@ -94,6 +94,13 @@ private GameModel GameToGameModel(Game game){
             gameManager.CountPoints(gameId);
             return Ok(g);
         }
+
+        [HttpPost]
+        [Route("api/games/reset")]
+        public IActionResult resetState() {
+            //GameRepository.reset();
+            return Ok();
+        }
         
 
         

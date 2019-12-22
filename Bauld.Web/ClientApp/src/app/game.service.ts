@@ -59,6 +59,10 @@ export class GameService {
     let body = {}
     return this.http.post<any>(url, body, httpOptions)
   }
+  resetState (){
+    let url = `${this.baseurl}/games/reset`
+    return this.http.post<any>(url, {}, httpOptions)
+  }
 
 }
 
