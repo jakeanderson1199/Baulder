@@ -25,13 +25,20 @@ namespace Models
         if (this.Turn.Votes != null){
             this.Turn.Votes.Clear();
         }
+        foreach(Player p in PlayerDict.Values){
+            p.Clear();
+        }
 
     }
     public void AddPlayer(Player p) {
         p.PlayerID = System.Guid.NewGuid().ToString();
         this.PlayerDict.Add(p.PlayerID,p);
     }
+    public Player GetPlayerByName(String name){
+        return PlayerDict.Values.FirstOrDefault(p => p.Name == name);
+    }
     
+
     
     
 public void Collections() {

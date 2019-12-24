@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GameModel, GameService } from './game.service';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -8,8 +9,13 @@ import { GameModel, GameService } from './game.service';
 })
 export class AppComponent {
   title = 'bauld';
-
+  constructor(
+    private gameService: GameService,
+    private route: ActivatedRoute,
+    private router: Router) { }
   resetState(): void {
-    GameService.resetState();
+    this.gameService.resetState().subscribe(r => {
+      this.router.navigate(['/dashboard']);
+    });
   }
 }

@@ -47,10 +47,10 @@ export class GameService {
     let url = `${this.baseurl}/games/${gameId}`
     return this.http.get<any>(url,httpOptions)
   }
-  postVote (owner_name: string,player_name: string,vote: string){
+  postVote (owner_name: string,player_name: string,playerID: string){
     let url = `${this.baseurl}/games/${owner_name}/players/${this.user}/vote`
     let body = {
-      "vote": vote
+      "playerID": playerID
     }
     return this.http.post<any>(url, body, httpOptions)
   }
@@ -60,7 +60,7 @@ export class GameService {
     return this.http.post<any>(url, body, httpOptions)
   }
   resetState (){
-    let url = `${this.baseurl}/games/reset`
+    let url = `${this.baseurl}/reset`
     return this.http.post<any>(url, {}, httpOptions)
   }
 
@@ -91,7 +91,7 @@ export class Player{
 export class Answer{
   userName: string;
   text: string;
-  isReal: boolean;
+  playerID: string;
   isUser: boolean;
   
 }

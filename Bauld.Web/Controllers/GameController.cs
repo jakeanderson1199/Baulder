@@ -59,16 +59,20 @@ private GameModel GameToGameModel(Game game){
         public IActionResult AddPlayer([FromBody] AddPlayerRequest player, String gameId) {
             Game g = this.gameManager.GetGame(gameId);
             Player p = new Player {Name = player.Name};
+            if (g.OwnerName == p.Name){
+                p.Owner = true;
+            }
             g.AddPlayer(p);
             return Ok(player);
         }
 
         [HttpPost]
         [Route("api/games/{gameId}/turns")]
-        public IActionResult NewTurn(String gameId) {
+        public IActionResult NewTurn(String gameId) {              //TODO remove players answers
             Game g = this.gameManager.GetGame(gameId);
             Question q = this.gameManager.NextQuestion();
             g.NewTurn(q);
+            var gameModel = this.GameToGameModel(g);
             return Ok(g);
         }
         [HttpPost]
@@ -76,14 +80,19 @@ private GameModel GameToGameModel(Game game){
         public IActionResult PostAnswer(String gameId, String user, [FromBody] Answer a) {
             Game g = this.gameManager.GetGame(gameId);
             g.Turn.Answers.Add(a);
+            g.GetPlayerByName(user).Answer = a;
+            a.PlayerID = g.GetPlayerByName(user).PlayerID;
             var gameModel = this.GameToGameModel(g);
             return Ok(gameModel);
         }
         [HttpPost]
         [Route("api/games/{gameId}/players/{user}/vote")]
-        public IActionResult PostVote(String gameId, [FromBody] Answer a) {
+        public IActionResult PostVote(String gameId, String user, [FromBody] String PlayerID) {
             Game g = this.gameManager.GetGame(gameId);
-            g.Turn.Answers.Add(a);
+            Vote v = new Vote();
+            v.AnswerId = PlayerID;  // gets the PlayerID of the player who wrote the answer that the user voted for
+            v.PlayerId = g.GetPlayerByName(user).PlayerID;        // gets the PlayerID of the player who is voting for the answer
+            g.Turn.Votes.Add(v);
             var gameModel = this.GameToGameModel(g);
             return Ok(gameModel);
         }
@@ -96,9 +105,9 @@ private GameModel GameToGameModel(Game game){
         }
 
         [HttpPost]
-        [Route("api/games/reset")]
+        [Route("api/reset")]
         public IActionResult resetState() {
-            //GameRepository.reset();
+            gameManager.Reset();
             return Ok();
         }
         

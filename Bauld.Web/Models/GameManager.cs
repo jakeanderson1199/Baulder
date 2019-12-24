@@ -45,6 +45,9 @@ namespace Models
 
             return g;
         }
+        public void Reset() {
+            gameRepository.Reset();
+        }
         public Game GetGame(string gameID){
             var g = gameRepository.GetGame(gameID);
             return g;

@@ -16,6 +16,9 @@ namespace Models
      public List<Game> GetGames(){
           var list = Games.Values.ToList();
             return list;
+     }
+     public void Reset(){
+         Games.Clear();
      } 
     }
 }

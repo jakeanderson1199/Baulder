@@ -71,23 +71,29 @@ export class GameComponent implements OnInit {
   nextTurn(): void {
     this.gameService.newTurn(this.gameId)
     .subscribe(r => {
-      this.onGameUpdated(r)
       this.userVoted = false;
+      this.onGameUpdated(r)
+     
       this.allAnswered = false;
       this.answer = null;
     })
+  }
+  joinNextTurn(): void{
+    this.userVoted = false;
+    this.refresh()
+    
   }
 
   get answers(): Answer[] {
     let answers: Answer[] = [];
     this.game.turn.answers.forEach(a => {
       let answer = new Answer();
-      answer.answer = a.text;
+      answer.text = a.text;
       a.isUser = a.userName === this.user;
       answers.push(answer);
     });
     //todo sort randomly
-    let real: Answer = { answer: this.game.turn.currentQuestion.answer, isUser: false, isReal: true };
+    let real: Answer = {userName: "REAL_ANSWER", text: this.game.turn.currentQuestion.answer, playerID: "REAL_ANSWER", isUser: false};
     answers.push(real);
     answers = shuffle(answers);
     return answers;
@@ -102,10 +108,11 @@ export class GameComponent implements OnInit {
 }
 
 export class Answer {
-  isReal: boolean;
-  isUser: boolean;
-  answer: string
-}
+  userName: string;
+  text: string;
+  playerID: string;
+  isUser: boolean
+} 
 function shuffle(a) {
   var j, x, i;
   for (i = a.length - 1; i > 0; i--) {
