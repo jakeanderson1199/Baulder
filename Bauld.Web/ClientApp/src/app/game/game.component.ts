@@ -17,7 +17,7 @@ export class GameComponent implements OnInit {
   gameId: string;
   allAnswered: boolean;
   userVoted: boolean;
-  ui:any = {}
+  ui:any = {};
 
   constructor(
     private gameService: GameService,
@@ -27,10 +27,9 @@ export class GameComponent implements OnInit {
   ngOnInit() {
     this.gameId = this.route.snapshot.paramMap.get('gameId');
     this.refresh();
-   
   }
   get user(): string {
-    return this.gameService.user
+    return this.gameService.user;
   }
   set user(user: string) {
     this.gameService.user = user;

@@ -18,4 +18,6 @@ export class AppComponent {
       this.router.navigate(['/dashboard']);
     });
   }
+
+  get user() { return this.gameService.user;}
 }

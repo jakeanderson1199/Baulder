@@ -14,7 +14,21 @@ namespace bauld
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            var configuration = new ConfigurationBuilder()
+        .AddCommandLine(args)
+        .Build();
+
+            var hostUrl = configuration["hosturl"];
+            if (string.IsNullOrEmpty(hostUrl))
+                hostUrl = "http://0.0.0.0:5000";
+
+            var builder = WebHost.CreateDefaultBuilder(args)
+                .UseUrls(hostUrl)
+                .UseStartup<Startup>();
+
+           
+            builder.Build()
+            .Run();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
