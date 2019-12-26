@@ -58,6 +58,10 @@ private GameModel GameToGameModel(Game game){
         [Route("api/games/{gameId}/players")]
         public IActionResult AddPlayer([FromBody] AddPlayerRequest player, String gameId) {
             Game g = this.gameManager.GetGame(gameId);
+            if (g == null) {
+                return UnprocessableEntity(new { message = $"Game id {gameId} not found"});
+            }
+
             Player p = new Player {Name = player.Name};
             if (g.OwnerName == p.Name){
                 p.Owner = true;

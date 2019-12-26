@@ -16,5 +16,10 @@
   </ItemGroup>
 
  
+ <ItemGroup>
+    <Content Include="Models\questions.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>  
+  </ItemGroup>
 
 </Project>

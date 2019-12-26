@@ -10,7 +10,7 @@ namespace Models
             return g;
      }   
       public Game GetGame(string gameID){
-          var g = Games[gameID];
+         Games.TryGetValue(gameID, out Game g);
             return g;
      } 
      public List<Game> GetGames(){

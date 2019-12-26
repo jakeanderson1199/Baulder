@@ -1,8 +1,9 @@
 <div class="container-fluid">
-<div class="bg-info text-white p2 text-center">
+
+<div class="bg-info text-white p2 text-center mb-5" style="margin-left: -15px; margin-right: -15px;">
   <button (click) = "resetState()" class="btn btn-sm btn-outline-primary float-left">Reset</button>
   <div class="h3 d-inline-block">BaulderDash</div>
-  <div class="float-right d-inline-block">Welcome {{user}}</div>
+  <div class="float-right d-inline-block mr-5">Welcome {{user || 'user not entered yet'}}</div>
 </div>
   <router-outlet></router-outlet>
   </div>

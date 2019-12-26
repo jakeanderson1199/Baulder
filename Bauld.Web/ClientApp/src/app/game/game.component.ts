@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { GameModel, GameService } from '../game.service';
+import { GameModel, GameService, Player } from '../game.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 
@@ -17,7 +17,7 @@ export class GameComponent implements OnInit {
   gameId: string;
   allAnswered: boolean;
   userVoted: boolean;
-  ui:any = {};
+  ui: any = {};
 
   constructor(
     private gameService: GameService,
@@ -39,22 +39,40 @@ export class GameComponent implements OnInit {
     this.gameService.postAnswer(this.gameId, this.answer)
       .subscribe(r => {
         this.onGameUpdated(r);
-      })
+      });
   }
   refresh(): void {
 
     this.gameService.getGame(this.gameId)
       .subscribe(r => {
-        console.log('got game',r);
+        console.log('got game', r);
         this.onGameUpdated(r);
       });
 
   }
 
+  getInstructions(): string {
+    if (!this.game || !this.game.turn) {
+      return 'not set yet';
+    }
+
+    const q = this.game.turn.currentQuestion;
+    const c = q.category;
+    if (c === 'word') {
+      return 'What is the definitiion of the word ' + q.label;
+    } else if (c === 'initials') {
+      return `What do the initials ${q.label} stand for?`;
+    } else if (c === 'people') {
+      return `What is ${q.label} famous for?`;
+    } else {
+      return '';
+    }
+  }
+
   private onGameUpdated(game: GameModel) {
     this.game = game;
     this.allAnswered = false
-    if (this.game.players.length == this.game.turn.answers.length){
+    if (this.game.players.length == this.game.turn.answers.length) {
       this.allAnswered = true;
     };
   }
@@ -69,18 +87,18 @@ export class GameComponent implements OnInit {
   }
   nextTurn(): void {
     this.gameService.newTurn(this.gameId)
-    .subscribe(r => {
-      this.userVoted = false;
-      this.onGameUpdated(r)
-     
-      this.allAnswered = false;
-      this.answer = null;
-    })
+      .subscribe(r => {
+        this.userVoted = false;
+        this.onGameUpdated(r)
+
+        this.allAnswered = false;
+        this.answer = null;
+      })
   }
-  joinNextTurn(): void{
+  joinNextTurn(): void {
     this.userVoted = false;
     this.refresh()
-    
+
   }
 
   get answers(): Answer[] {
@@ -92,7 +110,7 @@ export class GameComponent implements OnInit {
       answers.push(answer);
     });
     //todo sort randomly
-    let real: Answer = {userName: "REAL_ANSWER", text: this.game.turn.currentQuestion.answer, playerID: "REAL_ANSWER", isUser: false};
+    let real: Answer = { userName: "REAL_ANSWER", text: this.game.turn.currentQuestion.answer, playerID: "REAL_ANSWER", isUser: false };
     answers.push(real);
     answers = shuffle(answers);
     return answers;
@@ -104,6 +122,23 @@ export class GameComponent implements OnInit {
     return userplayer && userplayer.answer;
   }
 
+  playerHadAnswer(player: Player): boolean {
+    if (!this.game || !this.game.turn) {
+      return false;
+    }
+
+    const answers = this.game.turn.answers;
+
+    const playerAnswer = answers.find(a => a.playerID === player.playerID);
+
+    if (!playerAnswer) {
+      return false;
+    }
+
+    return playerAnswer.text === this.game.turn.currentQuestion.answer;
+
+
+  }
 }
 
 export class Answer {
@@ -111,7 +146,7 @@ export class Answer {
   text: string;
   playerID: string;
   isUser: boolean
-} 
+}
 function shuffle(a) {
   var j, x, i;
   for (i = a.length - 1; i > 0; i--) {

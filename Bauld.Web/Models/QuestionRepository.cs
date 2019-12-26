@@ -12,7 +12,7 @@ namespace Models
     public class QuestionRepository
     {
         public QuestionRepository() {
-            Questions = this.getQuestions(@"C:\Dev\bauld\Bauld.Web\Models\questions.txt");
+            Questions = this.getQuestions(@"Models/questions.txt");
         }
         public QuestionRepository(List<Question> list) {
             list.ForEach(q => Questions.Push(q));
@@ -44,7 +44,7 @@ namespace Models
         public Question getNextQuestion()
         {
             if (Questions.Count == 0) {
-                this.Questions = this.getQuestions(@"C:\Dev\bauld\Bauld.Web\Models\questions.txt");
+                this.Questions = this.getQuestions(@"Models\questions.txt");
             };
             return Questions.Pop();
         }

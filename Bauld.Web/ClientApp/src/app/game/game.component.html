@@ -1,59 +1,81 @@
-<div *ngIf="!userVoted && !userAnswered">
-<div>
-  <label> Category </label>
-  {{game?.turn?.currentQuestion?.category}}
-</div>
-
-<div>
-  <label>Question</label>
-  {{game?.turn?.currentQuestion?.label}}
-</div>
-
-<div>
-  <label>answer:
-    <input [(ngModel)]="answer" placeholder="answer">
-  </label>
-</div>
-
-<div>
-  <button (click)="saveAnswer()">Save Answer</button>
-</div>
-</div>
-<div>
-  <button (click)="refresh()">refresh</button>
-</div>
-<div *ngIf="!allAnswered">
-  <div *ngIf="userAnswered"> user answered {{userAnswered}}
-    Waiting for Players to answer...
+<div class="form-row">
+  <div class="col">
+    <div class="form-group">
+      <label>{{getInstructions()}}</label>
+      <input class="form-control" [(ngModel)]="answer" placeholder="your answer goes here">
+    </div>
   </div>
-
-
 </div>
 
-<div *ngIf="allAnswered && !userVoted">
-  <div class="row" *ngFor="let a of answers">
 
-    <div class="col-auto">
-      <div style="width: 70px">
-        <a *ngIf="!a.isUser" class="btn btn-light btn-sm" (click)="vote(a.playerID)">vote</a>
+
+<div *ngIf="!userVoted && !userAnswered" class="form-row mt-5">
+  <div class="col text-center">
+    <button class="btn btn-sm btn-outline-primary" (click)="saveAnswer()">Save Answer</button>
+
+  </div>
+</div>
+
+
+
+<div class="form-row">
+  <div class="col">
+    <div *ngIf="!allAnswered">
+      <div *ngIf="userAnswered"> user answered {{userAnswered}}
+        Waiting for Players to answer...
       </div>
+
+
     </div>
 
-    <div class="col text-left">
-      {{a.text}}
-    </div>
+    <div *ngIf="allAnswered && !userVoted">
+      <div class="form-row mb-2" *ngFor="let a of answers">
 
+        <div class="col-auto">
+          <div style="width: 70px" >
+            <a *ngIf="!a.isUser" class="btn btn-light btn-sm" (click)="vote(a.playerID)">vote</a>
+          </div>
+        </div>
+
+        <div class="col text-left">
+          {{a.text}}
+        </div>
+
+      </div>
+
+    </div>
   </div>
+</div>
 
+
+<div class="form-row mt-3">
+  <div class="col">
+    <button class="btn btn-sm btn-outline-secondary" (click)="refresh()">refresh</button>
+  </div>
 </div>
 
 <hr />
 <div *ngIf="userVoted">
-  <div class="row" *ngFor="let p of game.players">
+
+  <div class="form-row mt-5">
+    <div class="col">
+      The correct answer is: {{game?.turn?.currentQuestion?.answer}}
+    </div>
+  </div>
+
+  <div class="row mt-5" *ngFor="let p of game.players">
+    
     <div class="col-auto">
       <div>
-        Player: {{p.name}} Points:{{p.points}}
+        Player: {{p.name}}  {{playerHadAnswer(p)}} 
+        <!-- Points:{{p.answer}} -->
       </div>
+    </div>
+
+  </div>
+
+  <div class="form-row">
+    <div class="col">
       <div *ngIf="game?.ownerName==user">
         <a class="btn btn-light btn-sm" (click)="nextTurn()">New Turn</a>
       </div>
@@ -61,7 +83,6 @@
         <a class="btn btn-light btn-sm" (click)="joinNextTurn()">Join The New Turn</a>
       </div>
     </div>
-
   </div>
 </div>
 

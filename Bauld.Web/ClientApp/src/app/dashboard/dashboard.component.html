@@ -2,12 +2,10 @@
 <div class="row">
   <div class="col"></div>
 
-  <div class="col text-center">
-    <div class="h1 d-inline-block">Welcome to BoulderDash</div>
-  </div>
+ 
 
     <div class="col text-right">
-        <span *ngIf="user" >welcome {{user}}</span>
+      
     </div>
   </div>
 
@@ -17,7 +15,7 @@
   <div *ngIf="!user" class="col text-center">
     <div class="form-group">
     <label>User Name</label>
-      <input class="form-control" (keyup.enter)="user = tmpUser" [(ngModel)]="tmpUser" placeholder="name">
+      <input class="form-control" (keyup.enter)="user = tmpUser" [(ngModel)]="tmpUser" placeholder="Please enter your user name here to begin">
     </div>
     <button (click)="user = tmpUser">Save</button>
   </div>
@@ -40,7 +38,8 @@
       <div class="row" *ngFor="let g of games">
 
         <div class="col text-left">
-          {{g.ownerName}}<pre>{{g | json}}</pre>
+          {{g.ownerName}}
+          <!-- <pre>{{g | json}}</pre> -->
         </div>
         <div class="col-2">
 
