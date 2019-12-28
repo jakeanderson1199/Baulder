@@ -69,11 +69,12 @@ export class GameService {
 export class GameModel {
 ownerName: string;
 players: any[];
-answers: any[];
+answers: any[];         
 votes: any[];
 index: number;
 turn: Turn;
 gameId: string;
+allAnswered: boolean;
 }
 
 export interface GameSummary {

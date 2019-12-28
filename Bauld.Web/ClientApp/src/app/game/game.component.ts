@@ -27,6 +27,10 @@ export class GameComponent implements OnInit {
   ngOnInit() {
     this.gameId = this.route.snapshot.paramMap.get('gameId');
     this.refresh();
+    if (this.user == null) {
+      this.router.navigate(['/dashboard'])
+    }
+    ;
   }
   get user(): string {
     return this.gameService.user;
@@ -71,10 +75,7 @@ export class GameComponent implements OnInit {
 
   private onGameUpdated(game: GameModel) {
     this.game = game;
-    this.allAnswered = false
-    if (this.game.players.length == this.game.turn.answers.length) {
-      this.allAnswered = true;
-    };
+    this.allAnswered = this.game.allAnswered
   }
 
   vote(a): void {
@@ -106,12 +107,14 @@ export class GameComponent implements OnInit {
     this.game.turn.answers.forEach(a => {
       let answer = new Answer();
       answer.text = a.text;
+      answer.playerID = a.playerID;
+      answer.userName = a.userName;
       a.isUser = a.userName === this.user;
       answers.push(answer);
     });
     //todo sort randomly
-    let real: Answer = { userName: "REAL_ANSWER", text: this.game.turn.currentQuestion.answer, playerID: "REAL_ANSWER", isUser: false };
-    answers.push(real);
+    //let real: Answer = { userName: "REAL_ANSWER", text: this.game.turn.currentQuestion.answer, playerID: "REAL_ANSWER", isUser: false };
+    //answers.push(real);
     answers = shuffle(answers);
     return answers;
   }

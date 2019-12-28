@@ -14,7 +14,7 @@ private QuestionRepository questionRepository;
 private GameModel GameToGameModel(Game game){
     var playerList = game.PlayerDict.Values.ToList();
     var gameModel = new GameModel{
-    OwnerName = game.OwnerName, Players = playerList, Turn = game.Turn, GameID = game.GameID
+    OwnerName = game.OwnerName, Players = playerList, Turn = game.Turn, GameID = game.GameID, AllAnswered = game.AllAnswered
                 
     };
     return gameModel;
@@ -50,7 +50,7 @@ private GameModel GameToGameModel(Game game){
         [Route("api/games/{ownerName}")]
         public IActionResult AddGame(string ownerName) {
             this.gameManager.AddGame(ownerName);
-
+            
             return Ok();
         }
 
@@ -77,7 +77,7 @@ private GameModel GameToGameModel(Game game){
             Question q = this.gameManager.NextQuestion();
             g.NewTurn(q);
             var gameModel = this.GameToGameModel(g);
-            return Ok(g);
+            return Ok(gameModel);
         }
         [HttpPost]
         [Route("api/games/{gameId}/players/{user}/answer")]
@@ -91,12 +91,19 @@ private GameModel GameToGameModel(Game game){
         }
         [HttpPost]
         [Route("api/games/{gameId}/players/{user}/vote")]
-        public IActionResult PostVote(String gameId, String user, [FromBody] String PlayerID) {
+        public IActionResult PostVote(String gameId, String user, [FromBody] VotingPlayerID PlayerID) {    //TODO figure out why PlayerId is coming in null
             Game g = this.gameManager.GetGame(gameId);
             Vote v = new Vote();
-            v.AnswerId = PlayerID;  // gets the PlayerID of the player who wrote the answer that the user voted for
+            v.AnswerId = PlayerID.PlayerId;  // gets the PlayerID of the player who wrote the answer that the user voted for, need to use class in order to create JSON object that can be sent through http
             v.PlayerId = g.GetPlayerByName(user).PlayerID;        // gets the PlayerID of the player who is voting for the answer
+            if (v.AnswerId == "REAL_ANSWER"){    //checks vote to see if they voted for the correct answer
+                v.CorrectAnswer = true;
+            }
+            else {
+                v.CorrectAnswer = false;
+            }
             g.Turn.Votes.Add(v);
+            gameManager.CountPoints(gameId);
             var gameModel = this.GameToGameModel(g);
             return Ok(gameModel);
         }
@@ -105,8 +112,11 @@ private GameModel GameToGameModel(Game game){
         public IActionResult PostPoints(String gameId) {
             Game g = this.gameManager.GetGame(gameId);
             gameManager.CountPoints(gameId);
-            return Ok(g);
+            var gameModel = this.GameToGameModel(g);
+            return Ok(gameModel);
         }
+
+        
 
         [HttpPost]
         [Route("api/reset")]

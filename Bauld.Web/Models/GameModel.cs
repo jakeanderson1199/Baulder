@@ -16,6 +16,7 @@ namespace Models
     public List<Player> Players {get; set;} = new List<Player>();
     public Turn Turn {get; set;} = new Turn();
     public string GameID {get; set;}
+    public Boolean AllAnswered {get; set;}
 
     
     }

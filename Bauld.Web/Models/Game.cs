@@ -16,6 +16,16 @@ namespace Models
     public Dictionary<string,Player> PlayerDict {get; set;} = new Dictionary<string,Player>();
     public Turn Turn {get; set;} = new Turn();
     public string GameID {get; set;}
+    public Boolean AllAnswered => GetAllAnswered();
+
+    public Boolean GetAllAnswered(){
+        if (PlayerDict.Count == Turn.Answers.Count-1){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 
     public void NewTurn(Question q){
         this.Turn.CurrentQuestion = q;
@@ -25,6 +35,12 @@ namespace Models
         if (this.Turn.Votes != null){
             this.Turn.Votes.Clear();
         }
+        Answer RealAnswer = new Answer {
+            UserName = "REAL_ANSWER",
+            Text = this.Turn.CurrentQuestion.Answer, 
+            PlayerID = "REAL_ANSWER"
+            };
+        this.Turn.Answers.Add(RealAnswer);
         foreach(Player p in PlayerDict.Values){
             p.Clear();
         }
